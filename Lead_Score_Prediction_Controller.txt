@@ -1,0 +1,55 @@
+public class Lead_Score_Prediction_Controller {
+    public Double predictScore{get;set;}
+    public Parameter__c paramObj{get;set;}
+    public Map<String,Double> customerMap;
+    public Map<String,Double> dealValueMap;
+    public Map<String,Double> srMap;
+    
+    public Lead_Score_Prediction_Controller(){
+        paramObj = new Parameter__c();
+    }
+    
+    public void scorePrediction() {
+        Http h = new Http();
+        HttpRequest req = new HttpRequest();
+            req.setHeader('ContentType', 'application/json');
+        
+        	customerMap = new Map<String,Double>();
+            customerMap.put('Merck',1.0);
+            customerMap.put('AstraZeneca',2.0);
+        
+        	srMap = new Map<String,Double>();
+        	srMap.put('Ethan Dolan',1.0);
+        	srMap.put('Alicia Cargile',2.0);
+        
+        	dealValueMap = new Map<String,Double>();
+        	dealValueMap.put('High',1.0);
+        	dealValueMap.put('Low',2.0);        
+      
+        		JSONGenerator gen = JSON.createGenerator(true);
+                    gen.writeStartObject();
+                    gen.writeNumberField('attr0', customerMap.get(paramObj.Customer__c));
+                    gen.writeNumberField('attr1', srMap.get(paramObj.Sales_Representative__c));
+                    gen.writeNumberField('attr2', dealValueMap.get(paramObj.Deal_Value__c));
+                    gen.writeEndObject();
+                    
+                    String JSONBody = gen.getAsString();
+                    System.debug('JSONBody: ' + JSONBody);
+        
+            req.setBody(JSONBody);
+            req.setMethod('POST');
+            req.setEndpoint('http://13.71.124.174:8123/queries.json');
+        	system.debug('Request to PIO: '+req);
+        try{
+            HttpResponse res = h.send(req);
+            System.debug('ResStatus: '+ res.getStatus());
+            System.debug('ResBody: '+ res.getBody());
+                        
+		PredictParser prediction = (PredictParser)System.JSON.deserialize(res.getbody(), PredictParser.class);
+            predictScore = prediction.label;
+			system.debug('Score: '+ predictScore);
+        } catch (CalloutException e){
+            System.debug('An exception: '+ e);
+        	}   	
+    }
+}
