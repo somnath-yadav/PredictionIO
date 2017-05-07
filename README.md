@@ -3,7 +3,8 @@ This repository contains predictionIO setup, model training and deployment detai
 
 ## Installing Apache PredictionIO from Source Code
 - Download source code (apache-predictionio-0.10.0-incubating.tar.gz)
-- Install JAVA ()
+- Install JAVA (Note: openjdk-7 not supported)
+$ sudo apt-get install openjdk-8-jdk
 - Build
 $ tar zxvf apache-predictionio-0.11.0-incubating.tar.gz
 $ cd apache-predictionio-0.11.0-incubating
