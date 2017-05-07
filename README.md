@@ -1,8 +1,26 @@
 # PredictionIO
 This repository contains predictionIO setup, model training and deployment details and code.
 
+## Installing Apache PredictionIO from Source Code
+- Download source code (apache-predictionio-0.10.0-incubating.tar.gz)
+- Install JAVA ()
+- Build
+$ tar zxvf apache-predictionio-0.11.0-incubating.tar.gz
+$ cd apache-predictionio-0.11.0-incubating
+$ ./make-distribution.sh
+$ tar zxvf PredictionIO-0.11.0-incubating.tar.gz
+- Install dependencies
+$ mkdir PredictionIO-0.11.0-incubating/vendors
+*Spark setup
+$ wget http://d3kbcqa49mib13.cloudfront.net/spark-1.5.1-bin-hadoop2.6.tgz
+$ tar zxvfC spark-1.6.3-bin-hadoop2.6.tgz PredictionIO-0.11.0-incubating/vendors
+- Install PostgreSQL (postgresql-9.2.20-1-linux-x64.run)
+$ createdb pio
+$ psql -c "create user pio with password 'pio'"
+- Start PredictionIO and dependent services (PredictionIO-0.11.0-incubating/bin/pio eventserver &)
+
 ## Train and deploy model
-- Start event server (pio everntserver &)
+
 - Create a new engine from engine template (Using MyClassificion)
 ./pio template get apache/incubator-predictionio-template-attribute-based-classifier MyClassification1
 - Generate appID and EventKey 
